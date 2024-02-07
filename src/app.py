@@ -1,6 +1,6 @@
 from flask import Flask
 from build.run_build import build_application
-from test.run_test import run_tests
+from test.run_tests import run_tests
 
 app = Flask(__name__)
 
