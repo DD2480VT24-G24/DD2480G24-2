@@ -11,4 +11,4 @@ app.add_url_rule('/syntax', 'syntax', syntax_checker, methods=['POST'])
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8024)
