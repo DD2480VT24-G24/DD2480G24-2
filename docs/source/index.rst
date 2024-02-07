@@ -10,6 +10,7 @@ Welcome to Continuous Integration - Group 24's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   modules
 
 
 Indices and tables
