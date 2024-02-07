@@ -11,6 +11,9 @@ Welcome to Continuous Integration - Group 24's documentation!
    :caption: Contents:
 
    modules
+   build
+   syntax
+   tests
 
 
 Indices and tables

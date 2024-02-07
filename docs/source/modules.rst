@@ -5,3 +5,6 @@ src
    :maxdepth: 4
 
    app
+   syntax
+   tests
+   build
