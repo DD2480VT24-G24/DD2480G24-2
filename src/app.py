@@ -1,7 +1,7 @@
 from flask import Flask
 from build.run_build import build_application
 from syntax.run_syntax import syntax_checker
-from test.run_tests import run_tests
+from tests.run_tests import run_tests
 
 app = Flask(__name__)
 

@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-import src.test.run_tests as run_tests
+import tests.run_tests as run_tests
 
 
 class TestRunTests(unittest.TestCase):
