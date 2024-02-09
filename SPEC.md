@@ -45,10 +45,17 @@ Develop a CI server in Python that integrates with GitHub via Webhooks to automa
 - Ensures cleanup of cloned repositories after tests are completed to maintain a clean server.
 
 ## Operational Flow:
+### Pull requests
 1. The server receives a webhook event and validates it.
 2. Upon a pull request event, the server sets the status to pending and starts the test runner.
 3. After testing, the server captures the output and sets the status to success or failure.
 4. The server provides test output for debugging purposes.
+
+### Merge events
+1. The server receives a webhook event and validates it.
+2. Upon a merge event, the server sets the status to pending and starts building the documentation.
+3. After docs building, the server captures the output and sets the status to success or failure.
+4. The server provides docs build output for debugging purposes.
 
 ## Dependencies:
 - Flask web framework for the HTTP server.
