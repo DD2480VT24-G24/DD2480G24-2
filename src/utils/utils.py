@@ -59,7 +59,20 @@ def _remove_repo(destination_path):
 
 
 def verify_webhook_signature(payload_body, secret_token, signature_header):
-    
+    """
+    Verify that the webhook payload was sent from GitHub. 
+
+    :param payload_body: contents of the payload
+    :type payload_body: bytes 
+
+    :param secret_token: Stored GitHub Webhook token/secret
+    :type secret_token: str
+
+    :param signature_header: Webhooks token/secret signature
+    :type signature_header: str
+
+    :return: Whether the signature is correct or not
+    """
 
     if signature_header:
 
