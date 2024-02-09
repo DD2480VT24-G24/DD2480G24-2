@@ -1,29 +1,37 @@
 import git
-import subprocess
+import tempfile
+import shutil
 
-def _clone_repo(repo_url, destination_path):
+def _clone_repo(repo_url):
     """
-    Clones a Git repository from the specified URL to the given destination path.
+    Clones a Git repository from the specified URL to a temporary directory.
 
     Parameters:
         repo_url (str): The URL of the Git repository to clone.
-        destination_path (str): The path where the repository will be cloned.
 
     Returns:
-        None
-
+        tmp_dir (str): The path of the temporary directory where the repository is cloned.
+        None: If an error occurs during the cloning process.
+    
     Raises:
         git.exc.GitCommandError: If an error occurs during the cloning process.
     """
     try:
-        git.Repo.clone_from(repo_url, destination_path)
+        # Create a temporary directory
+        temp_dir = tempfile.mkdtemp()
+        
+        # Clone the repository into the temporary directory
+        git.Repo.clone_from(repo_url, temp_dir)
+        
         print("Repository cloned successfully.")
+        return temp_dir
     except git.exc.GitCommandError as e:
         print(f"Error cloning repository: {e}")
+        return None
 
-def _remove_repo(destination_path='temp/'):
+def _remove_repo(destination_path):
     """
-    Removes a directory or file at the specified destination path using the 'rm' command.
+    Removes a directory or file at the specified destination path.
 
     Parameters:
         destination_path (str): The path to the directory or file to be removed.
@@ -32,18 +40,16 @@ def _remove_repo(destination_path='temp/'):
         None
 
     Raises:
-        subprocess.CalledProcessError: If the subprocess call returns a non-zero exit status,
-            indicating an error occurred during the removal process.
+        FileNotFoundError: If the specified directory or file does not exist.
+        PermissionError: If the user does not have permission to remove the directory or file.
         Exception: If an unexpected error occurs during execution.
-
-    Note:
-        This function utilizes the 'rm -rf' command via subprocess to remove the specified directory
-        or file. It is important to exercise caution when using this function, as it permanently
-        deletes the specified content.
     """
     try:
-        subprocess.run(["rm", "-rf", destination_path])
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
+        # Remove the temporary directory
+        shutil.rmtree(destination_path)
+    except FileNotFoundError:
+        print(f"Error: {destination_path} not found.")
+    except PermissionError:
+        print(f"Error: Permission denied to remove {destination_path}.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
