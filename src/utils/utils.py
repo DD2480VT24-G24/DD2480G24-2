@@ -1,8 +1,10 @@
 import git
+from git.exc import GitCommandError
 import tempfile
 import shutil
 import hashlib
 import hmac
+
 
 def _clone_repo(repo_url):
     """
@@ -27,7 +29,7 @@ def _clone_repo(repo_url):
         
         print("Repository cloned successfully.")
         return temp_dir
-    except git.exc.GitCommandError as e:
+    except GitCommandError as e:
         print(f"Error cloning repository: {e}")
         return None
 
