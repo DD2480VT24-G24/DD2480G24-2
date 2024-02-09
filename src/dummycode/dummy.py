@@ -1,65 +1,65 @@
-class Dummy:
-    def add(a,b):
-        """
-        Simple method that adds two parameters
 
-        Parameters:
-        - a: a number
-        - b: a number
+def add(a,b):
+    """
+    Simple method that adds two parameters
 
-        Returns:
-        - a+b: The sum of a and b.
-        """
-        return a + b
+    Parameters:
+    - a: a number
+    - b: a number
 
-    def sub(a,b):
-        """
-        Simple method that subtracts two parameters
+    Returns:
+    - a+b: The sum of a and b.
+    """
+    return a + b
 
-        Parameters:
-        - a: a number
-        - b: a number
+def sub(a,b):
+    """
+    Simple method that subtracts two parameters
 
-        Returns:
-        - a-b: The sum of a and b.
-        """
-        return a - b
+    Parameters:
+    - a: a number
+    - b: a number
 
-    def mult(a,b):
-        """
-        Simple method that multiplies two parameters
+    Returns:
+    - a-b: The sum of a and b.
+    """
+    return a - b
 
-        Parameters:
-        - a: a number
-        - b: a number
+def mult(a,b):
+    """
+    Simple method that multiplies two parameters
 
-        Returns:
-        - a*b: The product sum of a and b.
-        """
-        return a*b
+    Parameters:
+    - a: a number
+    - b: a number
 
-    def div(a,b):
-        """
-        Simple method that divide two parameters
+    Returns:
+    - a*b: The product sum of a and b.
+    """
+    return a*b
 
-        Parameters:
-        - a: a number
-        - b: a number
+def div(a,b):
+    """
+    Simple method that divide two parameters
 
-        Returns:
-        - a/b: The division of a over b.
-        """
-        return a/b
+    Parameters:
+    - a: a number
+    - b: a number
 
-    def pow(a,b):
-        """
-        Simple method that take one parameter to the power of the other
+    Returns:
+    - a/b: The division of a over b.
+    """
+    return a/b
 
-        Parameters:
-        - a: a number
-        - b: a number
+def pow(a,b):
+    """
+    Simple method that take one parameter to the power of the other
 
-        Returns:
-        - a-b: The sum of a and b.
-        """
-        return a**b
+    Parameters:
+    - a: a number
+    - b: a number
+
+    Returns:
+    - a-b: The sum of a and b.
+    """
+    return a**b
