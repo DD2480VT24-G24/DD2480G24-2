@@ -1,6 +1,8 @@
 import git
 import tempfile
 import shutil
+import hashlib
+import hmac
 
 def _clone_repo(repo_url):
     """
@@ -53,3 +55,32 @@ def _remove_repo(destination_path):
         print(f"Error: Permission denied to remove {destination_path}.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+
+
+
+def verify_webhook_signature(payload_body, secret_token, signature_header):
+    """
+    Verify that the webhook payload was sent from GitHub. 
+
+    :param payload_body: contents of the payload
+    :type payload_body: bytes 
+
+    :param secret_token: Stored GitHub Webhook token/secret
+    :type secret_token: str
+
+    :param signature_header: Webhooks token/secret signature
+    :type signature_header: str
+
+    :return: Whether the signature is correct or not
+    """
+
+    if signature_header:
+
+        hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
+        
+        expected_signature = "sha256=" + hash_object.hexdigest()
+        
+        if hmac.compare_digest(expected_signature, signature_header):
+            return True
+    
+    return False
