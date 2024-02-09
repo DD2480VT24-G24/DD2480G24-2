@@ -20,6 +20,3 @@ def syntax_checker():
         return "Static syntax check executed successfully", 200
     else:
         return f"Static syntax check failed with error: {results.stdout}", 500
-
-if __name__ == '__main__':
-    syntax_checker();
