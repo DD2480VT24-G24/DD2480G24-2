@@ -7,7 +7,9 @@ Develop a CI server in Python that integrates with GitHub via Webhooks to automa
 
 ### Webhook Receiver:
 - The CI server is a Flask-based web server that listens for the configured GitHub Webhook events.
-- The endpoint `/webhook` is configured to accept POST requests representing GitHub events.
+- The endpoints `/build` and `/docs` is configured to accept POST requests representing GitHub events.
+    - `/build` is for pull requests when compiling and testing the source code.
+    - `/docs` is for merge events and builds the documentation available in the source code.
 
 ### GitHub Event Validation:
 - Prior to handling Webhook requests, a validation of incoming webhook events using a secret token is performed to ensure authenticity. [See Github Webhook validation](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries)
@@ -20,8 +22,8 @@ Develop a CI server in Python that integrates with GitHub via Webhooks to automa
 
 ### GitHub Status Updates:
 - Uses the GitHub Statuses API to set the commit status. [See Github Commit Statuses](https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28)
-- Marks the status as pending when tests commence.
-- Updates the status to success or failure upon test completion, depending on the test results, and provides the test output.
+- Marks the status as pending when build and tests commence.
+- Updates the status to success or failure upon build and test completion, depending on the results, and provides the output.
 
 ### Security and Authentication:
 - Securely handles GitHub access tokens
