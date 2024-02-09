@@ -1,3 +1,6 @@
+import subprocess
+import os
+
 def syntax_checker():
     """
     Executes a syntax check and updates the GitHub notification based on the test results.
@@ -9,4 +12,14 @@ def syntax_checker():
     :return: A tuple containing a message and a status code.
     :rtype: tuple
     """
-    return "Syntax check executed", 200
+ #   path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+    results = subprocess.run(['pyright'], capture_output=True, text=True)
+
+    #check if pyright succeeded
+    if results.returncode == 0:
+        return "Static syntax check executed successfully", 200
+    else:
+        return f"Static syntax check failed with error: {results.stdout}", 500
+
+if __name__ == '__main__':
+    syntax_checker();

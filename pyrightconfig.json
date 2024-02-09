@@ -1,0 +1,11 @@
+{
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "include": [
+                "src",
+                "tests"
+            ]
+        }
+    ]
+}
