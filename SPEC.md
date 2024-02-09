@@ -58,10 +58,10 @@ Develop a CI server in Python that integrates with GitHub via Webhooks to automa
 4. The server provides docs build output for debugging purposes.
 
 ## Dependencies:
-- Flask web framework for the HTTP server.
-- requests library for making GitHub API calls.
-- subprocess module for running shell commands.
-- hashlib and hmac modules for verifying the signature of the hashed Webhook secret message
+- `Flask` web framework for the HTTP server.
+- `requests` library for making GitHub API calls.
+- `subprocess` module for running shell commands.
+- `hashlib` and hmac modules for verifying the signature of the hashed Webhook secret message
 
 ## Security Considerations:
 
