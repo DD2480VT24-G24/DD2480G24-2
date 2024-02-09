@@ -15,10 +15,21 @@ Develop a CI server in Python that integrates with GitHub via Webhooks to automa
 - Prior to handling Webhook requests, a validation of incoming webhook events using a secret token is performed to ensure authenticity. [See Github Webhook validation](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries)
 - Parses the payload to extract relevant event details like repository URL and commit SHA.
 
+### Automated Compilation Execution:
+- Uses syntax checking instead of compiling since python is interpreted.
+- Calls `pyright` on the source code to validate the syntax.
+- Captures the results and outputs for further processing.
+
 ### Automated Test Execution:
 - Triggers a series of automated tests when a pull request is opened or reopened.
 - Utilizes the unittest framework to run test cases.
 - Captures test results and outputs for further processing.
+
+### Automated Documentation Building:
+- Triggers for merge events only.
+- Only defined for `Sphinx-doc` style documentation.
+- Builds the documentation and captures any information and outputs it for forther processing.
+- The documentation is put up as a release for the repository.
 
 ### GitHub Status Updates:
 - Uses the GitHub Statuses API to set the commit status. [See Github Commit Statuses](https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28)
