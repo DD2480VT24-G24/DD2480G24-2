@@ -1,6 +1,11 @@
+from flask import Flask, abort, request
 import requests
-import os
+import os, sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
 from payload import Payload
+from utils.utils import verify_webhook_signature
 
 
 def set_status(commit_sha, state, description, target_url, repo_name, repo_owner, github_token):
@@ -34,4 +39,31 @@ def build_application():
     :return: A tuple containing a message and a status code.
     :rtype: tuple
     """
+
+    secret_message = os.getenv('BUILD_SECRET')
+    github_token = os.getenv('GITHUB_TOKEN')
+
+    verified = verify_webhook_signature(request.data, secret_message, request.headers["X-Hub-Signature-256"])
+
+    if not verified:
+        abort(403, "x-hub-signature-256 header missing or invalid!")
+
+    payload_data = request.json
+
+    if 'pull_request' in payload_data:
+
+        try:
+            payload = Payload('pull_request', payload_data)
+            action = payload.action
+        except (KeyError, AttributeError) as error:
+            print(error)
+            abort(400, "Invalid payload")
+
+        if action in ['opened', 'reopened', 'synchronize', 'edited']:
+            set_status(payload.commit_sha, "pending", "Running build script", "TBD", payload.repo_name, payload.repo_owner, github_token)
+
+            # Run tests, syntax checking etc
+
+            # Set success/failure status upon test/syntax completion
+
     return "Build command executed", 200
