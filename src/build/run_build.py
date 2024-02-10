@@ -1,4 +1,4 @@
-from flask import Flask, abort, request
+from flask import abort, request
 import requests
 import os, sys
 
@@ -9,7 +9,34 @@ from utils.utils import verify_webhook_signature
 
 
 def set_status(commit_sha, state, description, target_url, repo_name, repo_owner, github_token):
-    #DOCS"#######
+    """
+    Set the status "state" of a commit on GitHub using the GitHub API. 
+    See section `Create a commit status` in the GitHub API documentation, or the README, for more information
+
+    :param commit_sha: The SHA of the commit to set the status for.
+    :type commit_sha: str
+
+    :param state: The state of the status. Can be one of "pending", "success", "error" or "failure".
+    :type state: str
+
+    :param description: A short description of the status which is visible in the GitHub UI.
+    :type description: str
+
+    :param target_url: The URL to associate with this status. This URL will be linked from the GitHub UI.
+    :type target_url: str
+
+    :param repo_name: The name of the repository.
+    :type repo_name: str
+
+    :param repo_owner: The owner of the repository.
+    :type repo_owner: str
+
+    :param github_token: A GitHub token with the necessary permissions to set the status.
+    :type github_token: str
+    
+    :return: The response from the GitHub API.
+    :rtype: dict
+    """
 
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/statuses/{commit_sha}"
 
