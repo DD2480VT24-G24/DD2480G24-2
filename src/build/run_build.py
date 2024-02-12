@@ -1,4 +1,4 @@
-from flask import abort, request
+from flask import abort, request, Response
 import datetime
 import requests
 import os, sys
@@ -77,6 +77,20 @@ def generate_build_file(test_output, syntax_output):
         log_file.write(test_output)
         log_file.write("\n\nSyntax Checking:\n\n")
         log_file.write(syntax_output)
+
+def build_results():
+    #DOCS#€
+    
+    log_file_path = "../../tests/test_output.log"
+
+    if not os.path.exists(log_file_path):
+        return "Log file not found", 404
+    
+    with open(log_file_path, "r") as log_file:
+        log_content = log_file.read()
+
+    return Response(log_content, mimetype='text/plain')
+
 
 def build_application():
     """
