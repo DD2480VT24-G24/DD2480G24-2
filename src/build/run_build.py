@@ -78,8 +78,16 @@ def generate_build_file(test_output, syntax_output):
         log_file.write("\n\nSyntax Checking:\n\n")
         log_file.write(syntax_output)
 
+import os
+
 def build_results():
-    #DOCS#€
+    """
+    Used as the target_url in the GitHub API status request. Presents the 
+    output of tests and syntax checking.
+
+    :return: The content of the log file if found, otherwise an error message
+    :rtype: str
+    """
     
     log_file_path = "../../tests/test_output.log"
 
