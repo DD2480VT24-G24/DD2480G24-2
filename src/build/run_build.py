@@ -47,7 +47,7 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
     }
     data = {
         "state": state,
-        #"target_url": target_url,  Add target URL here when it has been implemented
+        "target_url": target_url,
         "description": description
     }
 
@@ -120,7 +120,8 @@ def build_application():
         abort(403, "x-hub-signature-256 header missing or invalid!")
 
     payload_data = request.json
-
+    target_url = request.url.replace("build", "output")
+    
     if 'pull_request' in payload_data:
 
         try:
@@ -131,7 +132,7 @@ def build_application():
             abort(400, "Invalid payload")
 
         if action in ['opened', 'reopened', 'synchronize', 'edited']:
-            set_status(payload.commit_sha, "pending", "Running build script", "TBD", payload.repo_name, payload.repo_owner, github_token)
+            set_status(payload.commit_sha, "pending", "Running build script", target_url, payload.repo_name, payload.repo_owner, github_token)
 
             # Run tests, syntax checking etc
 
