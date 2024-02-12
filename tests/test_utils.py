@@ -1,9 +1,11 @@
 import unittest
 import sys, os
+import tempfile, subprocess, shutil
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 from src.utils.utils import _clone_repo, _remove_repo, verify_webhook_signature
+from src.utils.run_syntax import syntax_checker
 
 class TestUtils(unittest.TestCase):
     """
@@ -55,3 +57,39 @@ class TestUtils(unittest.TestCase):
         signature = "sha256=757107ea0eb2509fc211221cce984b8a37570b6d7586c22c46f4379c8b043e17"
 
         self.assertFalse(verify_webhook_signature(payload, secret, signature))
+
+    def test_run_syntax_accept(self):
+        """ 
+        Check if pyright doesn't find any error when it shouldn't
+        """
+        temp_path = tempfile.mkdtemp()
+        code = 'def add(a,b):\n\treturn a + b'
+        test_code = 'from ..src.tmp import add\ndef test_tmp():\n\tassert(add(4,4)==8)'
+        
+        subprocess.run(['mkdir', '-p', f'{temp_path}/src', f'{temp_path}/tests'])
+        
+        with open(f'{temp_path}/src/tmp.py', 'w') as code_file:
+            code_file.write(code)
+        with open(f'{temp_path}/tests/test.py', 'w') as test_code_file:
+            test_code_file.write(test_code)
+
+        self.assertEqual(syntax_checker(temp_path)[0], 0)
+        shutil.rmtree(temp_path)
+    
+    def test_run_syntax_decline(self):
+        """ 
+        Check if pyright find an error when it should
+        """
+        temp_path = tempfile.mkdtemp()
+        code = 'def add(a,b):\n\treturn ab'
+        test_code = 'from ..src.tmp import add\ndef test_tmp():\n\tassert(add(4,4)==8)'
+        
+        subprocess.run(['mkdir', '-p', f'{temp_path}/src', f'{temp_path}/tests'])
+        
+        with open(f'{temp_path}/src/tmp.py', 'w') as code_file:
+            code_file.write(code)
+        with open(f'{temp_path}/tests/test.py', 'w') as test_code_file:
+            test_code_file.write(test_code)
+
+        self.assertEqual(syntax_checker(temp_path)[0], 1)
+        shutil.rmtree(temp_path)
