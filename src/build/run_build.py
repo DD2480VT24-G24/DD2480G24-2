@@ -6,7 +6,9 @@ import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 from payload import Payload
-from utils.utils import verify_webhook_signature
+from utils.utils import verify_webhook_signature, _clone_repo, _remove_repo
+from src.utils.run_tests import run_tests
+from src.syntax.run_syntax import syntax_checker
 
 
 def set_status(commit_sha, state, description, target_url, repo_name, repo_owner, github_token):
@@ -45,11 +47,18 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
         "Authorization": f"token {github_token}",
         "Accept": "application/vnd.github+json",
     }
-    data = {
-        "state": state,
-        "target_url": target_url,
-        "description": description
-    }
+
+    if target_url != "":
+        data = {
+            "state": state,
+            "target_url": target_url,
+            "description": description
+        }
+    else:
+        data = {
+            "state": state,
+            "description": description
+        }
 
     response = requests.post(url, headers=headers, json=data)
     response.raise_for_status()
@@ -132,10 +141,29 @@ def build_application():
             abort(400, "Invalid payload")
 
         if action in ['opened', 'reopened', 'synchronize', 'edited']:
-            set_status(payload.commit_sha, "pending", "Running build script", target_url, payload.repo_name, payload.repo_owner, github_token)
+            set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
+            
+            repo_path, repo = _clone_repo(payload.clone_url)
+            repo.git.checkout(payload.commit_sha)
 
-            # Run tests, syntax checking etc
+            # Run syntax checking
+            syntax_result_code, syntax_output = syntax_checker(repo_path)
+            
+            # Run tests
+            test_result_code = 1
+            test_output = ""
+            
+            if syntax_result_code == 0:
+                test_result_code, test_output = run_tests(repo_path)
+
+            generate_build_file(test_output, syntax_output)
 
             # Set success/failure status upon test/syntax completion
+            if test_result_code == 0 and syntax_result_code == 0:
+                set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
+            
+            else:
+                set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
+
 
     return "Build command executed", 200
