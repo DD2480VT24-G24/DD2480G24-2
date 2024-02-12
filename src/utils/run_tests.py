@@ -1,7 +1,7 @@
 import unittest
 import io
-
-
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 def run_tests(repo_path):
     """
     This function is called from the Flask POST endpoint /build that receives an API call from GitHub webhooks
