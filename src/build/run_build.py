@@ -56,7 +56,15 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
     return response.json()
 
 def generate_build_file(test_output, syntax_output):
-    #DOCS"""####
+    """
+    Generate a log file containing both the unittest output and syntax checking output
+
+    :param test_output: unittest output
+    :type test_output: str
+
+    :param syntax_output: syntax checking output
+    :type syntax_output: str
+    """
 
     log_file_path = "../../tests/test_output.log"
     
