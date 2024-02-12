@@ -18,8 +18,8 @@ The unit testing is based on the Python built in `unittest` framework (https://d
 To run all tests in a file:
 - `python -m unittest <path to testfile>`
 
-
-## GitHub Webhooks
+## CI Tools Documentation
+### GitHub Webhooks
 This implementation utilises several webhooks for different purposes, such as handling issue creation and pull requests. 
 Currently, the CI server implementation is hosted locally and consequently all internet traffic is tunneled through [ngrok](https://ngrok.com). Any given Webhook in this project has the following characteristics:
 - `Payload URL`: The forwarding URL provided by `ngrok`
@@ -28,7 +28,7 @@ Currently, the CI server implementation is hosted locally and consequently all i
 - `SSL verification`: Enable SSL verification
 - `Events`: The event handled by the Webhook
 
-## GitHub API
+### GitHub API
 The GitHub API is used to set the status of a commit during the CI process on the server. 
 The implementation requires that the environment variables `BUILD_SECRET` and `GITHUB_TOKEN`
 are set, as these are required to verify GitHub webhooks as well as make requests to the
