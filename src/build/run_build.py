@@ -1,4 +1,5 @@
 from flask import abort, request
+import datetime
 import requests
 import os, sys
 
@@ -33,7 +34,7 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
 
     :param github_token: A GitHub token with the necessary permissions to set the status.
     :type github_token: str
-    
+
     :return: The response from the GitHub API.
     :rtype: dict
     """
@@ -54,6 +55,20 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
     response.raise_for_status()
     return response.json()
 
+def generate_build_file(test_output, syntax_output):
+    #DOCS"""####
+
+    log_file_path = "../../tests/test_output.log"
+    
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    current_time = datetime.datetime.now().strftime("%H:%M:%S")
+
+    with open(log_file_path, "w") as log_file:
+        log_file.write(f"Build results ({today} - {current_time}):\n\n")
+        log_file.write("Unittests:\n\n")
+        log_file.write(test_output)
+        log_file.write("\n\nSyntax Checking:\n\n")
+        log_file.write(syntax_output)
 
 def build_application():
     """
