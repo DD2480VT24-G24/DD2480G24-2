@@ -6,7 +6,7 @@ import requests
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import src.build.run_build as run_build
-from src.build.run_build import set_status
+from src.build.run_build import set_status, generate_build_file
 
 
 class TestRunBuild(unittest.TestCase):
@@ -64,6 +64,26 @@ class TestRunBuild(unittest.TestCase):
         set_status(commit_sha, "success", description, target_url, repo_name, repo_owner, github_token)
         state = self.get_status(repo_owner, repo_name, commit_sha, github_token)
         self.assertEqual(state, "success")
+
+    def test_generate_build_file(self):
+        """
+        Tests that the method actually creates a log output file with correct
+        contents
+        """
+
+        generate_build_file("Test success", "Syntax success")
+
+        log_file_path = "tests/test_output.log"
+
+        if not os.path.exists(log_file_path):
+            self.fail("No log file created")
+
+        with open(log_file_path, "r") as log_file:
+            log_content = log_file.read()
+
+        self.assertIn("Test success", log_content)
+        self.assertIn("Syntax success", log_content)
+        
 
 
 

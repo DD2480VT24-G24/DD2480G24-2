@@ -66,7 +66,7 @@ def generate_build_file(test_output, syntax_output):
     :type syntax_output: str
     """
 
-    log_file_path = "../../tests/test_output.log"
+    log_file_path = "tests/test_output.log"
     
     today = datetime.date.today().strftime("%Y-%m-%d")
     current_time = datetime.datetime.now().strftime("%H:%M:%S")
@@ -78,7 +78,6 @@ def generate_build_file(test_output, syntax_output):
         log_file.write("\n\nSyntax Checking:\n\n")
         log_file.write(syntax_output)
 
-import os
 
 def build_results():
     """
