@@ -9,6 +9,7 @@ app.add_url_rule('/build', 'build', build_application, methods=['POST'])
 app.add_url_rule('/output', 'build', test_results, methods=['GET'])
 app.add_url_rule('/test', 'test', run_tests, methods=['POST'])
 app.add_url_rule('/logs/all', 'logs_all', run_tests, methods=['GET'])
+app.add_url_rule('/logs/<string:id>', 'logs_id', get_log_individual, methods=['GET'])
 
 
 if __name__ == "__main__":
