@@ -1,7 +1,6 @@
-import unittest
-import io
-import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
+import subprocess
+
+
 def run_tests(repo_path):
     """
     This function is called from the Flask POST endpoint /build that receives an API call from GitHub webhooks
@@ -14,14 +13,12 @@ def run_tests(repo_path):
     test_dir = f"{repo_path}/tests"
     test_pattern = 'test*.py'
 
-    test_output = io.StringIO()
+    command = ["python", "-m", "unittest", "discover", "-s", test_dir, "-p", test_pattern, "-v"]
+    process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
-    test_suite = unittest.defaultTestLoader.discover(start_dir=test_dir, pattern=test_pattern)
-    test_runner = unittest.TextTestRunner(stream=test_output, verbosity=2)
-    
-    result = test_runner.run(test_suite)
+    # Get the output and return code
+    output = process.stdout
+    return_code = process.returncode
 
-    if result.wasSuccessful():
-        return 0, test_output.getvalue()
+    return return_code, output
     
-    return 1, test_output.getvalue()
