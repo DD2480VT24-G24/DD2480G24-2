@@ -12,6 +12,10 @@ Activate the virtual environment by running the appropriate `activate` script in
 Install all dependencies with `python -m pip install -r requirements.txt`.
 Use the `deactivate` command in your terminal when you are done.
 
+## Documentation
+Generate the documentation by running `make docs` after [installation](#Installation).
+After building the documentation, a PDF is available at `docs/build/pdf`.
+
 ## Testing
 The unit testing is based on the Python built in `unittest` framework (https://docs.python.org/3/library/unittest.html)
 
