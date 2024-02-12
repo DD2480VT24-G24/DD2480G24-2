@@ -2,6 +2,16 @@
 Minimum Supported Python Version (MSPV): 3.7
 Test Framework: unittest (Python native module)
 
+## Specification
+An information specification of the CI server can be found in the `SPEC.md` file.
+
+## Installation
+First make sure you are in the root directory of the repository.
+Create a virtual environment through `python -m venv venv`.
+Activate the virtual environment by running the appropriate `activate` script in `venv/bin/`.
+Install all dependencies with `python -m pip install -r requirements.txt`.
+Use the `deactivate` command in your terminal when you are done.
+
 ## Testing
 The unit testing is based on the Python built in `unittest` framework (https://docs.python.org/3/library/unittest.html)
 
