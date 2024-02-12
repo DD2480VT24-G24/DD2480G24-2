@@ -8,25 +8,25 @@ def _clone_repo(repo_url):
     """
     Clones a Git repository from the specified URL to a temporary directory.
 
-    Parameters:
-        repo_url (str): The URL of the Git repository to clone.
+    :param repo_url: The url to the repo (ssh works as well)
+    :type repo_url: str
 
-    Returns:
-        tmp_dir (str): The path of the temporary directory where the repository is cloned.
-        None: If an error occurs during the cloning process.
+    :return: temp_dir and repo: index0: the local path to the directory if clone was successful. index1: a repo object.
+    :type temp_dir: list
+
+    :return: None: if the clone wasn't successful
     
-    Raises:
-        git.exc.GitCommandError: If an error occurs during the cloning process.
+    :raises gitCommandError: If an error occurs during the cloning process.
     """
     try:
         # Create a temporary directory
         temp_dir = tempfile.mkdtemp()
         
         # Clone the repository into the temporary directory
-        git.Repo.clone_from(repo_url, temp_dir)
+        repo = git.Repo.clone_from(repo_url, temp_dir)
         
         print("Repository cloned successfully.")
-        return temp_dir
+        return [temp_dir, repo]
     except git.exc.GitCommandError as e:
         print(f"Error cloning repository: {e}")
         return None
@@ -35,16 +35,16 @@ def _remove_repo(destination_path):
     """
     Removes a directory or file at the specified destination path.
 
-    Parameters:
-        destination_path (str): The path to the directory or file to be removed.
+    :param destination_path: The path to the directory or file to be removed.
+    :type destination_path: str 
+   
+    :return: None
 
-    Returns:
-        None
+    :raises FileNotFoundError: If the specified directory or file does not exist.
 
-    Raises:
-        FileNotFoundError: If the specified directory or file does not exist.
-        PermissionError: If the user does not have permission to remove the directory or file.
-        Exception: If an unexpected error occurs during execution.
+    :raises PermissionError: If the user does not have permission to remove the directory or file.
+    
+    :raises Exception: If an unexpected error occurs during execution.
     """
     try:
         # Remove the temporary directory
