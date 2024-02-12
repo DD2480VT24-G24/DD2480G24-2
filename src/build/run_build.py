@@ -7,8 +7,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../'
 
 from payload import Payload
 from utils.utils import verify_webhook_signature, _clone_repo, _remove_repo
-from src.utils.run_tests import run_tests
-from src.syntax.run_syntax import syntax_checker
+from utils.run_tests import run_tests
+from syntax.run_syntax import syntax_checker
 
 
 def set_status(commit_sha, state, description, target_url, repo_name, repo_owner, github_token):
@@ -97,7 +97,7 @@ def build_results():
     :rtype: str
     """
     
-    log_file_path = "../../tests/test_output.log"
+    log_file_path = "tests/test_output.log"
 
     if not os.path.exists(log_file_path):
         return "Log file not found", 404
@@ -143,7 +143,9 @@ def build_application():
         if action in ['opened', 'reopened', 'synchronize', 'edited']:
             set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
             
-            repo_path, repo = _clone_repo(payload.clone_url)
+            info = _clone_repo(payload.clone_url)
+            repo_path, repo = info[0], info[1]
+            
             repo.git.checkout(payload.commit_sha)
 
             # Run syntax checking
@@ -152,7 +154,7 @@ def build_application():
             # Run tests
             test_result_code = 1
             test_output = ""
-            
+
             if syntax_result_code == 0:
                 test_result_code, test_output = run_tests(repo_path)
 

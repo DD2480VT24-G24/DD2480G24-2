@@ -26,4 +26,4 @@ def run_tests(repo_path):
     if result.wasSuccessful():
         return 0, test_output.getvalue()
     
-    return 1
+    return 1, test_output.getvalue()
