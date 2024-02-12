@@ -10,7 +10,8 @@ class TestUtils(unittest.TestCase):
     Check if repo gets cloned correctly
     """
     def test_clone_repo_gets_cloned(self):
-        temp_dir = _clone_repo('git@github.com:Adasjo/DD2480G24-2.git')
+        list = _clone_repo('git@github.com:Adasjo/DD2480G24-2.git')
+        temp_dir = list[0]
         if temp_dir != None:
             contents = os.listdir(temp_dir)
             self.assertTrue(len(contents) > 0)
