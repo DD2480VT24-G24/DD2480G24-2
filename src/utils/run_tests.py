@@ -1,7 +1,5 @@
-import os, sys
 import unittest
 import io
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 
 def run_tests(repo_path):
