@@ -75,7 +75,7 @@ def generate_build_file(test_output, syntax_output):
     :type syntax_output: str
     """
 
-    log_file_path = "tests/test_output.log"
+    log_file_path = "logs/test_output.log"
     
     today = datetime.date.today().strftime("%Y-%m-%d")
     current_time = datetime.datetime.now().strftime("%H:%M:%S")
@@ -97,7 +97,7 @@ def build_results():
     :rtype: str
     """
     
-    log_file_path = "tests/test_output.log"
+    log_file_path = "logs/test_output.log"
 
     if not os.path.exists(log_file_path):
         return "Log file not found", 404
