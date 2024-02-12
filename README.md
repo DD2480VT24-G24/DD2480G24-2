@@ -15,6 +15,7 @@ Currently, the CI server implementation is hosted locally and consequently all i
 - `Content type`: application/json
 - `SSL verification`: Enable SSL verification
 - `Events`: The event handled by the Webhook
+  
 
 ## GitHub API
 The GitHub API is used to set the status of a commit during the CI process on the server. 
