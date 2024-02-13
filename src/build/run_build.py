@@ -155,7 +155,7 @@ def build_application():
         
         # Run tests
         test_result_code = 1
-        test_output = ""
+        test_output = "No tests run due to failure of syntax checking"
 
         if syntax_result_code == 0:
             test_result_code, test_output = run_tests(repo_path)
