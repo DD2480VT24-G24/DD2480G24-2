@@ -11,7 +11,9 @@ def syntax_checker(repo_path):
     :return: A tuple containing a status code and a message
     :rtype: tuple
     """
-    
-    results = subprocess.run(['pyright', f'{repo_path}/src/', f'{repo_path}/tests/'], capture_output=True, text=True)
+
+    results = subprocess.run(['pyright', 'src/', 'tests/'], capture_output=True, text=True, cwd=repo_path)
+
     return results.returncode, results.stdout
+
     

@@ -15,11 +15,10 @@ def _clone_repo(repo_url):
 
     :return: temp_dir and repo: index0: the local path to the directory if clone was successful. index1: a repo object.
     :type temp_dir: list
-
-    :return: None: if the clone wasn't successful
     
     :raises gitCommandError: If an error occurs during the cloning process.
     """
+
     try:
         # Create a temporary directory
         temp_dir = tempfile.mkdtemp()
@@ -28,11 +27,11 @@ def _clone_repo(repo_url):
         repo = git.Repo.clone_from(repo_url, temp_dir)
         
         print("Repository cloned successfully.")
-        return [temp_dir, repo]
+        return temp_dir, repo
     except GitCommandError as e:
         print(f"Error cloning repository: {e}")
-        return None
-
+        raise e
+        
 def _remove_repo(destination_path):
     """
     Removes a directory or file at the specified destination path.

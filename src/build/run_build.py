@@ -3,6 +3,8 @@ import requests
 import os
 import sys
 import logging
+from git.exc import GitCommandError
+
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -103,59 +105,55 @@ def build_application():
 
     payload_data = request.json
 
-    if 'pull_request' in payload_data:
+    try:
+        payload = Payload('pull_request', payload_data)
+        action = payload.action
+    except (KeyError, AttributeError) as error:
+        print(error)
+        abort(400, "Invalid payload")
 
-        try:
-            payload = Payload('pull_request', payload_data)
-            action = payload.action
-        except (KeyError, AttributeError) as error:
-            print(error)
-            abort(400, "Invalid payload")
+    logger = initialize_logging(payload.commit_sha)
+    target_url = request.url.replace("build", f"logs/{payload.commit_sha}")
 
-        logger = initialize_logging(payload.commit_sha)
-        target_url = request.url.replace("build", f"logs/{payload.commit_sha}")
+    if action in ['opened', 'reopened', 'synchronize', 'edited']:
+        set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
+        
+        logger.debug(f"Build started for commit {payload.commit_sha}")
 
-        if action in ['opened', 'reopened', 'synchronize', 'edited']:
-            set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
-            logger.debug(f"Build started for commit {payload.commit_sha}")
+        info = _clone_repo(payload.clone_url)
+        repo_path, repo = info[0], info[1]
 
-            info = _clone_repo(payload.clone_url)
-            repo_path, repo = info[0], info[1]
+        logger.debug(f"Cloning Repo for {payload.commit_sha}")
 
-            logger.debug(f"Cloning Repo for {payload.commit_sha}")
+        repo.git.checkout(payload.commit_sha)
+        logger.debug(f"Checking out commit {payload.commit_sha}")
 
-            repo.git.checkout(payload.commit_sha)
+        syntax_result_code, syntax_output = syntax_checker(repo_path)
 
-            logger.debug(f"Checking out commit {payload.commit_sha}")
+        logger.info(f"Syntax checking completed with result code {syntax_result_code}")
+        logger.debug(f"Syntax checking output: {syntax_output}")
 
-            # Run syntax checking
-            syntax_result_code, syntax_output = syntax_checker(repo_path)
+        test_result_code = 1
+        test_output = ""
 
-            logger.info(f"Syntax checking completed with result code {syntax_result_code}")
-            logger.debug(f"Syntax checking output: {syntax_output}")
+        if syntax_result_code == 0:
+            test_result_code, test_output = run_tests(repo_path)
 
-            # Run tests
-            test_result_code = 1
-            test_output = ""
+            logger.info(f"Unittests completed with result code {test_result_code}")
+            logger.debug(f"Unittests output: {test_output}")
 
-            if syntax_result_code == 0:
-                test_result_code, test_output = run_tests(repo_path)
+        # Set success/failure status upon test/syntax completion
+        if test_result_code == 0 and syntax_result_code == 0:
+            set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
 
-                logger.info(f"Unittests completed with result code {test_result_code}")
-                logger.debug(f"Unittests output: {test_output}")
+            logger.info(f"Build completed successfully for commit {payload.commit_sha}")
+        else:
+            set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
 
-            # Set success/failure status upon test/syntax completion
-            if test_result_code == 0 and syntax_result_code == 0:
-                set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
+            logger.error(f"Build failed for commit {payload.commit_sha}")
 
-                logger.info(f"Build completed successfully for commit {payload.commit_sha}")
-            else:
-                set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
+        _remove_repo(repo_path)
 
-                logger.error(f"Build failed for commit {payload.commit_sha}")
-
-            _remove_repo(repo_path)
-
-            logger.debug(f"Removed cloned repo for commit {payload.commit_sha}")
+        logger.debug(f"Removed cloned repo for commit {payload.commit_sha}")
 
     return "Build command executed", 200
