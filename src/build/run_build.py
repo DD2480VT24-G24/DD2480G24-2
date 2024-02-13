@@ -3,8 +3,6 @@ import requests
 import os
 import sys
 import logging
-from git.exc import GitCommandError
-
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -69,6 +67,18 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
 
 
 def initialize_logging(commit_sha):
+    """
+    Initializes logging for the application.
+
+    Args:
+        commit_sha: The SHA of the commit associated with the log file.
+
+    Returns:
+        logger: The logger object for logging messages.
+
+    Examples:
+        >>> logger = initialize_logging("abc123")
+    """
     log_file_path = os.path.join("logs", f"{commit_sha}.log")
 
     logger = logging.getLogger(__name__)
@@ -117,7 +127,7 @@ def build_application():
 
     if action in ['opened', 'reopened', 'synchronize', 'edited']:
         set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
-        
+
         logger.debug(f"Build started for commit {payload.commit_sha}")
 
         info = _clone_repo(payload.clone_url)
