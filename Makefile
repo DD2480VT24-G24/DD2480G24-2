@@ -1,4 +1,13 @@
-.PHONY: docs
+PYTHON = python3
+PYRIGHT = pyright
+
+.PHONY: docs test build
+
+build:
+	$(PYRIGHT) src/ tests/
+
+test:
+	cd tests && $(PYTHON) -m unittest
 
 docs:
 	cd docs && $(MAKE) html
