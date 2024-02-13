@@ -91,7 +91,7 @@ def build_application():
     if not verified:
         abort(403, "x-hub-signature-256 header missing or invalid!")
 
-    payload_data = request.json
+    payload_data = request.json or {}
 
     if 'pull_request' in payload_data:
 
