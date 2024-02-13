@@ -140,6 +140,20 @@ sphinx-build -b pdf source build/pdf
 
 This command instructs Sphinx to build the documentation in PDF format.
 
+## Essence Analysis
+Currently the team is working to complete "In Use". The previous lists were 
+completed and understood during the previous assignment. However, important
+to note is that during this assignment our effectivity has reduced fair bit
+on all fronts. This is largely due to, as expected, that this assignment
+was not as predefined as the previous and as such we found ourselves figuring
+out how to most effectively split up the task. Due to this, it took more time
+and effort to fulfill the checklist goals, but towards the end we regained a
+lot of the momentum we had previously lost. For future projects we will aim
+to remove this reduction in efficiency by preparing the workload and job
+specification in more detail before we move on. Furthermore, to complete the
+checklists "In Place" and "Working well" the team simply needs more practice,
+aside from the previously stated planning.
+
 ## Contributions
 
 **Martin**
