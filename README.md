@@ -126,6 +126,10 @@ This command instructs Sphinx to build the documentation in PDF format.
 
 ## Contributions
 **Adam**
+- Made clone_repo method (pair programmed with Victor)
+- Made remove_repo method (pair programmed with Victor)
+- Server responsible (Documentation, setup, etc.)
+- GitHub setup
 
 **Andreas**
 - Repo Admin (issues, pull requests, labeling, etc.)
