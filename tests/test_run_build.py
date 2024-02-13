@@ -44,26 +44,6 @@ class TestRunBuild(unittest.TestCase):
         response_json = response.json()
         return response_json["state"]
 
-    # def test_set_status(self):
-    #     """
-    #     Tests that the status of a commit is correctly set by setting the same commit to two different statuses.
-    #     The commit used is the test commit in pull request #34.
-    #     """
-
-    #     commit_sha = "3dd1a5bac9a59dd16da3f211c95d248e285dec3e"
-    #     description = "Testing"
-    #     target_url = "TBD"
-    #     repo_name = "DD2480G24-2"
-    #     repo_owner = "Adasjo"
-    #     github_token = os.getenv("GITHUB_TOKEN")
-
-    #     set_status(commit_sha, "pending", description, target_url, repo_name, repo_owner, github_token)
-    #     state = self.get_status(repo_owner, repo_name, commit_sha, github_token)
-    #     self.assertEqual(state, "pending")
-
-    #     set_status(commit_sha, "success", description, target_url, repo_name, repo_owner, github_token)
-    #     state = self.get_status(repo_owner, repo_name, commit_sha, github_token)
-    #     self.assertEqual(state, "success")
 
     def test_generate_build_file(self):
         """
