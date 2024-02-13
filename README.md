@@ -151,3 +151,10 @@ This command instructs Sphinx to build the documentation in PDF format.
 
 **Victor**
 
+- Made clone_repo method (pair programmed with Adam)
+- Made remove_repo method (pair programmed with Adam)
+- Added Test section into README
+- Made dummy code and associated test
+- Made the static syntax checker with corresponding tests
+- Made install, build, test and default_goal in makefile
+- Corrected syntax errors in our code (together with Adam and Martin)
