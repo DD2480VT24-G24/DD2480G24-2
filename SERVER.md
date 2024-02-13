@@ -29,7 +29,12 @@ start_server.sh
 ```
 #!/bin/bash
 cd YOUR_REPO
+if [ ! -f .env ]
+then
+  export $(cat .env | xargs)
+fi
 source venv/bin/activate
+pip install -r requirements.txt
 cd src/
 python3 app.py
 ```

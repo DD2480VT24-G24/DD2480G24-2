@@ -2,3 +2,5 @@ venv
 **pycache**
 **.pyc
 docs/build
+logs/*.log
+.env
