@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../'
 from payload import Payload
 from utils.utils import verify_webhook_signature, _clone_repo, _remove_repo
 from utils.run_tests import run_tests
-from syntax.run_syntax import syntax_checker
+from utils.run_syntax import syntax_checker
 
 
 def set_status(commit_sha, state, description, target_url, repo_name, repo_owner, github_token):
