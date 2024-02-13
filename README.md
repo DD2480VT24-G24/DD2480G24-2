@@ -31,6 +31,11 @@ The logs are stored in the `logs` directory and are named after the commit id. T
 
 The `GET /logs/all` endpoint will return a list of all logs in the logs directory.
 
+### Webhooks
+- `POST /build`: Performs syntax checking and tests of a PR.
+
+Reporting is done on the PR, and details can be viewed on the link of `details` and accessed through the [logs](#logs) endpoint.
+
 ## CI Tools Documentation
 ### GitHub Webhooks
 This implementation utilises several webhooks for different purposes, such as handling issue creation and pull requests. 
