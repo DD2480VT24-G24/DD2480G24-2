@@ -29,6 +29,7 @@ start_server.sh
 ```
 #!/bin/bash
 cd YOUR_REPO
+pip install -r requirements.txt
 source venv/bin/activate
 cd src/
 python3 app.py
