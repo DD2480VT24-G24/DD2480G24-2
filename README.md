@@ -156,6 +156,10 @@ aside from the previously stated planning.
 
 ## Contributions
 **Adam**
+- Made clone_repo method (pair programmed with Victor)
+- Made remove_repo method (pair programmed with Victor)
+- Server responsible (Documentation, setup, etc.)
+- GitHub setup
 
 **Andreas**
 - Repo Admin (issues, pull requests, labeling, etc.)
@@ -188,3 +192,4 @@ aside from the previously stated planning.
 - Made the static syntax checker with corresponding tests
 - Made install, build, test and default_goal in makefile
 - Corrected syntax errors in our code (together with Adam and Martin)
+
