@@ -12,7 +12,7 @@ def syntax_checker(repo_path):
     :rtype: tuple
     """
     
-    results = subprocess.run(['pyright', f'{repo_path}/src/', f'{repo_path}/test/'], capture_output=True, text=True)
-    print(results)
+    results = subprocess.run(['pyright', f'{repo_path}/src/', f'{repo_path}/tests/'], capture_output=True, text=True)
+
     return results.returncode, results.stdout
     
