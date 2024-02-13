@@ -1,6 +1,5 @@
 import unittest
-import sys
-import os
+import os, sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -14,10 +13,10 @@ class TestRunTests(unittest.TestCase):
         Tests that the run_tests function accepts a path to a directory containing passing tests, and passes
         all of them.
         """
+        
+        current_dir = os.path.dirname(os.path.abspath(__file__)) + "/../src/dummycode"
 
-        path = "src/dummycode"
-
-        return_code, output = run_tests(path)
+        return_code, output = run_tests(current_dir)
 
         self.assertEqual(return_code, 0)
         self.assertNotEqual(output, "")
