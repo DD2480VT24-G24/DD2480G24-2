@@ -67,9 +67,19 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
 
 
 def initialize_logging(commit_sha):
-    log_file_path = os.path.join(r"logs", f"{commit_sha}.log")
-    logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='[%(asctime)s] [Build Stage: %(build_stage)s] [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    return logging.getLogger(__name__)
+    log_file_path = os.path.join("logs", f"{commit_sha}.log")
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    fh = logging.FileHandler(log_file_path)
+    fh.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+    fh.setFormatter(formatter)
+
+    logger.addHandler(fh)
+
+    return logger
 
 
 def build_application():
@@ -107,22 +117,22 @@ def build_application():
 
         if action in ['opened', 'reopened', 'synchronize', 'edited']:
             set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
-            logger.debug(f"Build started for commit {payload.commit_sha}", extra={'build_stage': 'preBuild'})
+            logger.debug(f"Build started for commit {payload.commit_sha}")
 
             info = _clone_repo(payload.clone_url)
             repo_path, repo = info[0], info[1]
 
-            logger.debug(f"Cloning Repo for {payload.commit_sha}", extra={'build_stage': 'preBuild'})
+            logger.debug(f"Cloning Repo for {payload.commit_sha}")
 
             repo.git.checkout(payload.commit_sha)
 
-            logger.debug(f"Checking out commit {payload.commit_sha}", extra={'build_stage': 'preBuild'})
+            logger.debug(f"Checking out commit {payload.commit_sha}")
 
             # Run syntax checking
             syntax_result_code, syntax_output = syntax_checker(repo_path)
 
-            logger.info(f"Syntax checking completed with result code {syntax_result_code}", extra={'build_stage': 'syntaxChecker'})
-            logger.debug(f"Syntax checking output: {syntax_output}", extra={'build_stage': 'syntaxChecker'})
+            logger.info(f"Syntax checking completed with result code {syntax_result_code}")
+            logger.debug(f"Syntax checking output: {syntax_output}")
 
             # Run tests
             test_result_code = 1
@@ -131,21 +141,21 @@ def build_application():
             if syntax_result_code == 0:
                 test_result_code, test_output = run_tests(repo_path)
 
-                logger.info(f"Unittests completed with result code {test_result_code}", extra={'build_stage': 'unittests'})
-                logger.debug(f"Unittests output: {test_output}", extra={'build_stage': 'unittests'})
+                logger.info(f"Unittests completed with result code {test_result_code}")
+                logger.debug(f"Unittests output: {test_output}")
 
             # Set success/failure status upon test/syntax completion
             if test_result_code == 0 and syntax_result_code == 0:
                 set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
 
-                logger.info(f"Build completed successfully for commit {payload.commit_sha}", extra={'build_stage': 'postBuild'})
+                logger.info(f"Build completed successfully for commit {payload.commit_sha}")
             else:
                 set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
 
-                logger.error(f"Build failed for commit {payload.commit_sha}", extra={'build_stage': 'postBuild'})
+                logger.error(f"Build failed for commit {payload.commit_sha}")
 
             _remove_repo(repo_path)
 
-            logger.debug(f"Removed cloned repo for commit {payload.commit_sha}", extra={'build_stage': 'postBuild'})
+            logger.debug(f"Removed cloned repo for commit {payload.commit_sha}")
 
     return "Build command executed", 200
