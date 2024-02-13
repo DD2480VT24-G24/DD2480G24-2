@@ -40,6 +40,11 @@ The logs are stored in the `logs` directory and are named after the commit id. T
 
 The `GET /logs/all` endpoint will return a list of all logs in the logs directory.
 
+### Build
+- `POST /build`: Endpoint used by the GitHub Webhook to build the project upon a pull request
+
+The build endpoint is used by the GitHub Webhook to trigger a build of the project. The endpoint will be triggered on all commits to the repository. The endpoint will compile the project by running a syntax check and running the tests. The results of the build will be stored in the logs directory. The endpoint will also update the status of the commit on GitHub.
+
 ## GitHub Webhooks
 This implementation utilises several webhooks for different purposes, such as handling issue creation and pull requests. 
 Currently, the CI server implementation is hosted locally and consequently all internet traffic is tunneled through [ngrok](https://ngrok.com). Any given Webhook in this project has the following characteristics:
@@ -56,6 +61,68 @@ are set, as these are required to verify GitHub webhooks as well as make request
 GitHub API. The method `set_status` in `run_build.py` is used to set the status of a commit to either of the
 available statuses "pending", "success", "error" or "failure". The implementation follows the 
 [GitHub documentation](https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28) under section `Create a commit status`.
+
+## Documentation
+Adding New Modules to Sphinx Documentation
+To include new modules in the Sphinx documentation, use the following command:
+
+```bash
+sphinx-apidoc -o docs/source/ src/
+```
+
+This command generates reStructuredText files in the docs/source/ directory, based on the modules found in the src/ directory.
+
+### Building the Documentation as an HTML Page
+
+To build the documentation into HTML format, follow these steps depending on your operating system:
+
+**For Windows:**
+
+Navigate to the docs directory:
+
+```bash
+cd docs
+```
+
+Then, run the make batch file:
+
+```bash
+.\make.bat html
+```
+
+**For Linux:**
+
+Navigate to the docs directory:
+
+```bash
+cd docs
+```
+
+Then, use the make command:
+
+```bash
+make html
+```
+
+This process will compile the Sphinx documentation into HTML pages, which can be found in the docs/build/html directory.
+
+### Generating Documentation as a PDF
+
+To create a PDF version of your Sphinx documentation, we use the following commands:
+
+Navigate to the docs directory:
+
+```bash
+cd docs
+```
+
+Then, run the following command:
+
+```bash
+sphinx-build -b pdf source build/pdf
+```
+
+This command instructs Sphinx to build the documentation in PDF format.
 
 ## Contributions
 
