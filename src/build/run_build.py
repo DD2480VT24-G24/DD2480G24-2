@@ -1,7 +1,8 @@
-from flask import abort, request, Response
-import datetime
+from flask import abort, request
 import requests
-import os, sys
+import os
+import sys
+import logging
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -13,7 +14,7 @@ from utils.run_syntax import syntax_checker
 
 def set_status(commit_sha, state, description, target_url, repo_name, repo_owner, github_token):
     """
-    Set the status "state" of a commit on GitHub using the GitHub API. 
+    Set the status "state" of a commit on GitHub using the GitHub API.
     See section `Create a commit status` in the GitHub API documentation, or the README, for more information
 
     :param commit_sha: The SHA of the commit to set the status for.
@@ -64,48 +65,11 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
     response.raise_for_status()
     return response.json()
 
-def generate_build_file(test_output, syntax_output):
-    """
-    Generate a log file containing both the unittest output and syntax checking output
 
-    :param test_output: unittest output
-    :type test_output: str
-
-    :param syntax_output: syntax checking output
-    :type syntax_output: str
-    """
-
-    log_file_path = "logs/test_output.log"
-    
-    today = datetime.date.today().strftime("%Y-%m-%d")
-    current_time = datetime.datetime.now().strftime("%H:%M:%S")
-
-    with open(log_file_path, "w") as log_file:
-        log_file.write(f"Build results ({today} - {current_time}):\n\n")
-        log_file.write("Unittests:\n\n")
-        log_file.write(test_output)
-        log_file.write("\n\nSyntax Checking:\n\n")
-        log_file.write(syntax_output)
-
-
-def build_results():
-    """
-    Used as the target_url in the GitHub API status request. Presents the 
-    output of tests and syntax checking.
-
-    :return: The content of the log file if found, otherwise an error message
-    :rtype: str
-    """
-    
-    log_file_path = "logs/test_output.log"
-
-    if not os.path.exists(log_file_path):
-        return "Log file not found", 404
-    
-    with open(log_file_path, "r") as log_file:
-        log_content = log_file.read()
-
-    return Response(log_content, mimetype='text/plain')
+def initialize_logging(commit_sha):
+    log_file_path = os.path.join("logs", f"{commit_sha}.log")
+    logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='[%(asctime)s] [Build Stage: %(build_stage)s] [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    return logging.getLogger(__name__)
 
 
 def build_application():
@@ -119,7 +83,6 @@ def build_application():
     :return: A tuple containing a message and a status code.
     :rtype: tuple
     """
-
     secret_message = os.getenv('BUILD_SECRET')
     github_token = os.getenv('GITHUB_TOKEN')
 
@@ -130,7 +93,7 @@ def build_application():
 
     payload_data = request.json
     target_url = request.url.replace("build", "output")
-    
+
     if 'pull_request' in payload_data:
 
         try:
@@ -140,17 +103,27 @@ def build_application():
             print(error)
             abort(400, "Invalid payload")
 
+        logger = initialize_logging(payload.commit_sha)
+
         if action in ['opened', 'reopened', 'synchronize', 'edited']:
             set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
-            
+            logger.debug(f"Build started for commit {payload.commit_sha}", extra={'build_stage': 'preBuild'})
+
             info = _clone_repo(payload.clone_url)
             repo_path, repo = info[0], info[1]
-            
+
+            logger.debug(f"Cloning Repo for {payload.commit_sha}", extra={'build_stage': 'preBuild'})
+
             repo.git.checkout(payload.commit_sha)
+
+            logger.debug(f"Checking out commit {payload.commit_sha}", extra={'build_stage': 'preBuild'})
 
             # Run syntax checking
             syntax_result_code, syntax_output = syntax_checker(repo_path)
-            
+
+            logger.info(f"Syntax checking completed with result code {syntax_result_code}", extra={'build_stage': 'syntaxChecker'})
+            logger.debug(f"Syntax checking output: {syntax_output}", extra={'build_stage': 'syntaxChecker'})
+
             # Run tests
             test_result_code = 1
             test_output = ""
@@ -158,16 +131,21 @@ def build_application():
             if syntax_result_code == 0:
                 test_result_code, test_output = run_tests(repo_path)
 
-            generate_build_file(test_output, syntax_output)
+                logger.info(f"Unittests completed with result code {test_result_code}", extra={'build_stage': 'unittests'})
+                logger.debug(f"Unittests output: {test_output}", extra={'build_stage': 'unittests'})
 
             # Set success/failure status upon test/syntax completion
             if test_result_code == 0 and syntax_result_code == 0:
                 set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
-            
+
+                logger.info(f"Build completed successfully for commit {payload.commit_sha}", extra={'build_stage': 'postBuild'})
             else:
                 set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
 
+                logger.error(f"Build failed for commit {payload.commit_sha}", extra={'build_stage': 'postBuild'})
+
             _remove_repo(repo_path)
 
+            logger.debug(f"Removed cloned repo for commit {payload.commit_sha}", extra={'build_stage': 'postBuild'})
 
     return "Build command executed", 200
