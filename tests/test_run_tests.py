@@ -15,7 +15,7 @@ class TestRunTests(unittest.TestCase):
         all of them.
         """
 
-        path = "."
+        path = "src/dummycode"
 
         return_code, output = run_tests(path)
 
