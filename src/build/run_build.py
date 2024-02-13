@@ -67,8 +67,7 @@ def set_status(commit_sha, state, description, target_url, repo_name, repo_owner
 
 
 def initialize_logging(commit_sha):
-    os.makedirs(r"../logs", exist_ok=True)
-    log_file_path = os.path.join(r"../logs", f"{commit_sha}.log")
+    log_file_path = os.path.join(r"logs", f"{commit_sha}.log")
     logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='[%(asctime)s] [Build Stage: %(build_stage)s] [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     return logging.getLogger(__name__)
 
