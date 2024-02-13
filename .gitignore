@@ -3,4 +3,5 @@ venv
 **.pyc
 docs/build
 logs/*.log
+src/logs/*.log
 .env
