@@ -28,11 +28,16 @@ pdf_documents = [('index', u'rst2pdf', u'Software Engineering Fundamentals Group
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinx_rtd_theme"
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # -- Path setup --------------------------------------------------------------
 import os
 import sys
 
+sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../src/dummycode'))
+sys.path.insert(0, os.path.abspath('../../src/build'))
+sys.path.insert(0, os.path.abspath('../../src/logs'))
+sys.path.insert(0, os.path.abspath('../../src/utils'))
 sys.path.insert(0, os.path.abspath('../../src'))
