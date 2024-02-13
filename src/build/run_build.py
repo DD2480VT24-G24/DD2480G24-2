@@ -92,7 +92,6 @@ def build_application():
         abort(403, "x-hub-signature-256 header missing or invalid!")
 
     payload_data = request.json
-    target_url = request.url.replace("build", "output")
 
     if 'pull_request' in payload_data:
 
@@ -104,6 +103,7 @@ def build_application():
             abort(400, "Invalid payload")
 
         logger = initialize_logging(payload.commit_sha)
+        target_url = request.url.replace("build", f"logs/{payload.commit_sha}")
 
         if action in ['opened', 'reopened', 'synchronize', 'edited']:
             set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
