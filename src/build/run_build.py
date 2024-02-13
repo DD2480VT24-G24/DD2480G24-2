@@ -2,6 +2,7 @@ from flask import abort, request, Response
 import datetime
 import requests
 import os, sys
+from git.exc import GitCommandError
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -131,43 +132,44 @@ def build_application():
     payload_data = request.json
     target_url = request.url.replace("build", "output")
     
-    if 'pull_request' in payload_data:
+    try:
+        payload = Payload('pull_request', payload_data)
+        action = payload.action
+    except (KeyError, AttributeError) as error:
+        print(error)
+        abort(400, "Invalid payload")
 
+    if action in ['opened', 'reopened', 'synchronize', 'edited']:
+        set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
+        
         try:
-            payload = Payload('pull_request', payload_data)
-            action = payload.action
-        except (KeyError, AttributeError) as error:
-            print(error)
-            abort(400, "Invalid payload")
+            repo_path, repo = _clone_repo(payload.clone_url)
+        except(GitCommandError):
+            return 'unable to clone repo', 400
 
-        if action in ['opened', 'reopened', 'synchronize', 'edited']:
-            set_status(payload.commit_sha, "pending", "Running build script", "", payload.repo_name, payload.repo_owner, github_token)
-            
-            info = _clone_repo(payload.clone_url)
-            repo_path, repo = info[0], info[1]
-            
-            repo.git.checkout(payload.commit_sha)
+        
+        repo.git.checkout(payload.commit_sha)
 
-            # Run syntax checking
-            syntax_result_code, syntax_output = syntax_checker(repo_path)
-            
-            # Run tests
-            test_result_code = 1
-            test_output = ""
+        # Run syntax checking
+        syntax_result_code, syntax_output = syntax_checker(repo_path)
+        
+        # Run tests
+        test_result_code = 1
+        test_output = ""
 
-            if syntax_result_code == 0:
-                test_result_code, test_output = run_tests(repo_path)
+        if syntax_result_code == 0:
+            test_result_code, test_output = run_tests(repo_path)
 
-            generate_build_file(test_output, syntax_output)
+        generate_build_file(test_output, syntax_output)
 
-            # Set success/failure status upon test/syntax completion
-            if test_result_code == 0 and syntax_result_code == 0:
-                set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
-            
-            else:
-                set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
+        # Set success/failure status upon test/syntax completion
+        if test_result_code == 0 and syntax_result_code == 0:
+            set_status(payload.commit_sha, "success", "Build succeeded", target_url, payload.repo_name, payload.repo_owner, github_token)
+        
+        else:
+            set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
 
-            _remove_repo(repo_path)
+        _remove_repo(repo_path)
 
 
     return "Build command executed", 200

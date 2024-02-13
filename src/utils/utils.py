@@ -28,10 +28,10 @@ def _clone_repo(repo_url):
         repo = git.Repo.clone_from(repo_url, temp_dir)
         
         print("Repository cloned successfully.")
-        return [temp_dir, repo]
+        return temp_dir, repo
     except GitCommandError as e:
         print(f"Error cloning repository: {e}")
-        return None
+        raise e
 
 def _remove_repo(destination_path):
     """
