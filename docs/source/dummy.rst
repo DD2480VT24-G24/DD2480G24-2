@@ -1,7 +1,7 @@
-app module
-==========
+dummy module
+============
 
-.. automodule:: app
+.. automodule:: dummy
    :members:
    :undoc-members:
    :show-inheritance:
