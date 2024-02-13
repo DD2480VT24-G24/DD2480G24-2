@@ -11,7 +11,7 @@ build:
 	$(PYRIGHT) src/ tests/
 
 test:
-	cd tests && $(PYTHON) -m unittest
+	$(PYTHON) -m unittest discover -s tests
 
 docs:
 	cd docs && $(MAKE) html
