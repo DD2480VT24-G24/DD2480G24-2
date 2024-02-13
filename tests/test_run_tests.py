@@ -4,11 +4,24 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-import src.utils.run_tests as run_tests
+from src.utils.run_tests import run_tests
 
 
 class TestRunTests(unittest.TestCase):
-    pass
+    
+    def test_run_tests_accepts(self):
+        """
+        Tests that the run_tests function accepts a path to a directory containing passing tests, and passes
+        all of them.
+        """
+        
+        path = "tests"
+
+        return_code, output = run_tests(path)
+
+        self.assertEqual(return_code, 0)
+        self.assertNotEqual(output, "")
+
 
 
 if __name__ == '__main__':
