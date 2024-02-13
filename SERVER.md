@@ -34,6 +34,7 @@ then
   export $(cat .env | xargs)
 fi
 source venv/bin/activate
+pip install -r requirements.txt
 cd src/
 python3 app.py
 ```
