@@ -40,6 +40,11 @@ The logs are stored in the `logs` directory and are named after the commit id. T
 
 The `GET /logs/all` endpoint will return a list of all logs in the logs directory.
 
+### Build
+- `POST /build`: Endpoint used by the GitHub Webhook to build the project upon a pull request
+
+The build endpoint is used by the GitHub Webhook to trigger a build of the project. The endpoint will be triggered on all commits to the repository. The endpoint will compile the project by running a syntax check and running the tests. The results of the build will be stored in the logs directory. The endpoint will also update the status of the commit on GitHub.
+
 ## GitHub Webhooks
 This implementation utilises several webhooks for different purposes, such as handling issue creation and pull requests. 
 Currently, the CI server implementation is hosted locally and consequently all internet traffic is tunneled through [ngrok](https://ngrok.com). Any given Webhook in this project has the following characteristics:
