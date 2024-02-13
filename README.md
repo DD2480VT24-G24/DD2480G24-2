@@ -155,6 +155,20 @@ checklists "In Place" and "Working well" the team simply needs more practice,
 aside from the previously stated planning.
 
 ## Contributions
+**Adam**
+
+**Andreas**
+- Repo Admin (issues, pull requests, labeling, etc.)
+- Miscellaneous help (subsitute pair programmer, debugging, advice, etc.) with all group members
+- Documentation management (Misc. fixes, restructuring/writing, fill in blanks)
+
+**Casper**
+- Skeleton code for the project
+- Setup the basic structure of the Flask application
+- Automated Documentation generation
+- Implemented CI#4: Build History
+  - Created the two endpoints `/logs/<commit_id>` and `/logs/all`
+  - Created the relevant logging functionality for the build process
 
 **Martin**
 - Documentation for GitHub Webhooks, GitHub API as well as the specification of the CI server
@@ -164,3 +178,13 @@ aside from the previously stated planning.
   - CI#2 test client code
   - CI#3 status notification
 - Cooperated with Victor to solve various issues related to imports as well as executing tests in a temporary repo, where the `unittest` module experienced extensive pathing issues
+
+**Victor**
+
+- Made clone_repo method (pair programmed with Adam)
+- Made remove_repo method (pair programmed with Adam)
+- Added Test section into README
+- Made dummy code and associated test
+- Made the static syntax checker with corresponding tests
+- Made install, build, test and default_goal in makefile
+- Corrected syntax errors in our code (together with Adam and Martin)
