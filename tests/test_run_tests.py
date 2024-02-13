@@ -14,8 +14,8 @@ class TestRunTests(unittest.TestCase):
         Tests that the run_tests function accepts a path to a directory containing passing tests, and passes
         all of them.
         """
-        
-        path = "tests"
+
+        path = "."
 
         return_code, output = run_tests(path)
 
