@@ -9,7 +9,7 @@ def get_log_ids():
         dict: A dictionary containing a list of log IDs.
     """
 
-    log_files = os.listdir('logs/')
+    log_files = os.listdir('../logs/')
     log_ids = [file[:-4] for file in log_files if file.endswith('.log')]
 
     return {"ids": log_ids}

@@ -16,7 +16,7 @@ def get_log_individual(id):
     Raises:
         404 Error: If the log file does not exist.
     """
-    log_file = f'logs/{id}.log'
+    log_file = f'../logs/{id}.log'
 
     if not os.path.exists(log_file):
         abort(404)
