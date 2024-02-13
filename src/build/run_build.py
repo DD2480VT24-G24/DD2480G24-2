@@ -110,6 +110,12 @@ def build_application():
             logger.debug(f"Build started for commit {payload.commit_sha}", extra={'build_stage': 'preBuild'})
 
             info = _clone_repo(payload.clone_url)
+
+            if info is None:
+                logger.error("Could not clone repo. Check that it is accessible.", extra={'build_stage': 'preBuild'})
+                set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
+                return "Build command executed", 200
+            
             repo_path, repo = info[0], info[1]
 
             logger.debug(f"Cloning Repo for {payload.commit_sha}", extra={'build_stage': 'preBuild'})
