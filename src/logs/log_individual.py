@@ -23,8 +23,12 @@ def get_log_individual(id):
 
     last_modified_date = datetime.datetime.fromtimestamp(os.path.getmtime(log_file)).isoformat()
 
-    with open(log_file, 'r') as file:
-        log = file.read()
+    try:
+        with open(log_file, 'r') as file:
+            log = file.read()
+    except:
+        print(f"Could not open file '{log_file}'.")
+        abort(500)
 
     return jsonify({
         "commit": id,
