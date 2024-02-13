@@ -23,3 +23,17 @@ are set, as these are required to verify GitHub webhooks as well as make request
 GitHub API. The method `set_status` in `run_build.py` is used to set the status of a commit to either of the
 available statuses "pending", "success", "error" or "failure". The implementation follows the 
 [GitHub documentation](https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28) under section `Create a commit status`.
+
+## Contributions
+**Adam**
+
+**Andreas**
+- Repo Admin (issues, pull requests, labeling, etc.)
+- Miscellaneous help (subsitute pair programmer, debugging, advice, etc.) with all group members
+- Documentation management (Misc. fixes, restructuring/writing, fill in blanks)
+
+**Casper**
+
+**Martin**
+
+**Victor**
