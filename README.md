@@ -66,6 +66,12 @@ available statuses "pending", "success", "error" or "failure". The implementatio
 - Documentation management (Misc. fixes, restructuring/writing, fill in blanks)
 
 **Casper**
+- Skeleton code for the project
+- Setup the basic structure of the Flask application
+- Automated Documentation generation
+- Implemented CI#4: Build History
+  - Created the two endpoints `/logs/<commit_id>` and `/logs/all`
+  - Created the relevant logging functionality for the build process
 
 **Martin**
 - Documentation for GitHub Webhooks, GitHub API as well as the specification of the CI server
