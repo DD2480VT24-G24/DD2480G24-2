@@ -1,5 +1,27 @@
 # DD2480G24: CI
 
+This project contains a functioning implementation of a CI server which communicates through the GitHub API and GitHub Webhooks to build the project (tests and syntax checking). The server stores all build outputs  which are accessible as secure endpoints on the server. Upon a new pull request, the server sets a pending status of the commit on GitHub, builds the project, and provides results as well as sets the status depending on the result.
+
+## Folder structure
+
+The following main folders and files constitute the project:
+- DD2480G24-2
+    - `docs` Containts build information
+    - `src`
+        - `build` Containts method executed upon a build request
+        - `dummycode` Contains code which can be used to test the CI implementation
+        - `logs` Contains all log files for builds
+        - `utils` Contains utility functions such as test runner and syntax checker
+        - `app.py` Contains main flask application
+        - `payload.py` Contains Webhook parser
+    - `tests` Contains all tests of the CI server
+    - `Makefile` Build commands for local development
+    - `README.md`
+    - `requirements.txt` Contains all required modules
+    - `SERVER.md` Contains information about the host ssh server
+    - `SPEC.md` Contains a specification of the CI server
+
+
 ## Testing
 The unit testing is based on the Python built in `unittest` framework (https://docs.python.org/3/library/unittest.html)
 
@@ -7,6 +29,9 @@ To run all tests in a file:
 - `python -m unittest <path to testfile>`
 
 ## API Endpoints
+
+### Build
+- `GET /build`: Endpoint used by the GitHub Webhook to build the project upon a pull request
 ### Logs
 - `GET /logs/<commit_id>`: Returns the logs for the given commit id
 - `GET /logs/all`: Returns all logs
@@ -43,5 +68,13 @@ available statuses "pending", "success", "error" or "failure". The implementatio
 **Casper**
 
 **Martin**
+- Documentation for GitHub Webhooks, GitHub API as well as the specification of the CI server
+- Implemented: 
+  - Webhook validation
+  - Webhook parsing
+  - CI#2 test client code
+  - CI#3 status notification
+- Cooperated with Victor to solve various issues related to imports as well as executing tests in a temporary repo, where the `unittest` module experienced extensive pathing issues
 
 **Victor**
+
