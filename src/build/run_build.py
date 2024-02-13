@@ -167,5 +167,7 @@ def build_application():
             else:
                 set_status(payload.commit_sha, "failure", "Build failed", target_url, payload.repo_name, payload.repo_owner, github_token)
 
+            _remove_repo(repo_path)
+
 
     return "Build command executed", 200
