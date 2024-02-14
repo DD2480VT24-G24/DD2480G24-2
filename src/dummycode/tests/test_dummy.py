@@ -7,7 +7,7 @@ from dummy import add, sub, mult, div, pow
 
 class TestDummy(unittest.TestCase):
     def test_add(self):
-        self.assertEqual(add(4,5), 9)
+        self.assertEqual(add(4,5), 8)
     
     def test_sub(self):
         self.assertEqual(sub(4,5), -1)
